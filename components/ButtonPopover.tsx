@@ -1,13 +1,18 @@
 "use client";
 
-import { Popover, Transition } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  Transition,
+} from "@headlessui/react";
 
 const ButtonPopover = () => {
   return (
     <Popover className="relative z-10">
       {({ open }) => (
         <>
-          <Popover.Button className="btn">
+          <PopoverButton className="btn">
             Popover Button
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +28,7 @@ const ButtonPopover = () => {
                 clipRule="evenodd"
               />
             </svg>
-          </Popover.Button>
+          </PopoverButton>
           <Transition
             enter="transition duration-100 ease-out"
             enterFrom="transform scale-95 opacity-0"
@@ -32,7 +37,7 @@ const ButtonPopover = () => {
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-full sm:max-w-sm lg:max-w-2xl transform">
+            <PopoverPanel className="absolute left-0 z-10 mt-3 w-screen max-w-full sm:max-w-sm lg:max-w-2xl transform">
               <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-base-content ring-opacity-5">
                 <div className="relative grid gap-4 bg-base-100 p-4 lg:grid-cols-2">
                   <div className="text-sm flex items-center gap-3 p-2 cursor-pointer hover:bg-base-200 rounded-lg duration-200">
@@ -114,7 +119,7 @@ const ButtonPopover = () => {
                   </div>
                 </div>
               </div>
-            </Popover.Panel>
+            </PopoverPanel>
           </Transition>
         </>
       )}
