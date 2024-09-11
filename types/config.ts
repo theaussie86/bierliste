@@ -15,6 +15,7 @@ export type Theme =
   | "aqua"
   | "lofi"
   | "pastel"
+  | "lemonade"
   | "fantasy"
   | "wireframe"
   | "black"
