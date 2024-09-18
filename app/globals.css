@@ -19,4 +19,7 @@ progress::-webkit-progress-value {
   .btn {
     @apply !capitalize;
   }
+  :root {
+    --radius: 0.5rem;
+  }
 }

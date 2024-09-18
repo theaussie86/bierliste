@@ -1,4 +1,5 @@
 module.exports = {
+  darkMode: ["class"],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -20,12 +21,22 @@ module.exports = {
       },
       keyframes: {
         opacity: {
-          "0%": { opacity: 0 },
-          "100%": { opacity: 1 },
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
         },
         appearFromRight: {
-          "0%": { opacity: 0.3, transform: "translate(15%, 0px);" },
-          "100%": { opacity: 1, transform: "translate(0);" },
+          "0%": {
+            opacity: "0.3",
+            transform: "translate(15%, 0px);",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translate(0);",
+          },
         },
         wiggle: {
           "0%, 20%, 80%, 100%": {
@@ -45,19 +56,44 @@ module.exports = {
           },
         },
         popup: {
-          "0%": { transform: "scale(0.8)", opacity: 0.8 },
-          "50%": { transform: "scale(1.1)", opacity: 1 },
-          "100%": { transform: "scale(1)", opacity: 1 },
+          "0%": {
+            transform: "scale(0.8)",
+            opacity: "0.8",
+          },
+          "50%": {
+            transform: "scale(1.1)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
         },
         shimmer: {
-          "0%": { backgroundPosition: "0 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
+          "0%": {
+            backgroundPosition: "0 50%",
+          },
+          "50%": {
+            backgroundPosition: "100% 50%",
+          },
+          "100%": {
+            backgroundPosition: "0% 50%",
+          },
         },
       },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      colors: {},
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("daisyui"),
+    require("tailwindcss-animate"),
+  ],
   daisyui: {
     // Light & dark themes are added by default (it switches automatically based on OS settings)
     // You can add another theme among the list of 30+

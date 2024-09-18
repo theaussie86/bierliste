@@ -2,9 +2,17 @@
 "use client";
 
 import { useState } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import { useSession, signOut } from "next-auth/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  Transition,
+} from "@headlessui/react";
 import apiClient from "@/libs/api";
+import {
+  LogoutLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 
 // A button to show user some account actions
 //  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).
@@ -13,12 +21,9 @@ import apiClient from "@/libs/api";
 //  2. Logout: sign out and go back to homepage
 // See more at https://shipfa.st/docs/components/buttonAccount
 const ButtonAccount = () => {
-  const { data: session, status } = useSession();
+  const { user, isAuthenticated } = useKindeBrowserClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
-  };
   const handleBilling = async () => {
     setIsLoading(true);
 
@@ -39,17 +44,19 @@ const ButtonAccount = () => {
   };
 
   // Don't show anything if not authenticated (we don't have any info about the user)
-  if (status === "unauthenticated") return null;
+  if (!isAuthenticated) return null;
+
+  console.log(user);
 
   return (
     <Popover className="relative z-10">
       {({ open }) => (
         <>
-          <Popover.Button className="btn">
-            {session?.user?.image ? (
+          <PopoverButton className="btn">
+            {user.picture ? (
               <img
-                src={session?.user?.image}
-                alt={session?.user?.name || "Account"}
+                src={user.picture}
+                alt={user.given_name + " " + user.family_name || "Account"}
                 className="w-6 h-6 rounded-full shrink-0"
                 referrerPolicy="no-referrer"
                 width={24}
@@ -57,12 +64,11 @@ const ButtonAccount = () => {
               />
             ) : (
               <span className="w-6 h-6 bg-base-300 flex justify-center items-center rounded-full shrink-0">
-                {session?.user?.name?.charAt(0) ||
-                  session?.user?.email?.charAt(0)}
+                {user.given_name?.charAt(0) || user.email?.charAt(0)}
               </span>
             )}
 
-            {session?.user?.name || "Account"}
+            {user.given_name || "Account"}
 
             {isLoading ? (
               <span className="loading loading-spinner loading-xs"></span>
@@ -82,7 +88,7 @@ const ButtonAccount = () => {
                 />
               </svg>
             )}
-          </Popover.Button>
+          </PopoverButton>
           <Transition
             enter="transition duration-100 ease-out"
             enterFrom="transform scale-95 opacity-0"
@@ -91,31 +97,10 @@ const ButtonAccount = () => {
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
+            <PopoverPanel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
               <div className="overflow-hidden rounded-xl shadow-xl ring-1 ring-base-content ring-opacity-5 bg-base-100 p-1">
                 <div className="space-y-0.5 text-sm">
-                  <button
-                    className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-                    onClick={handleBilling}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M2.5 4A1.5 1.5 0 001 5.5V6h18v-.5A1.5 1.5 0 0017.5 4h-15zM19 8.5H1v6A1.5 1.5 0 002.5 16h15a1.5 1.5 0 001.5-1.5v-6zM3 13.25a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zm4.75-.75a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Billing
-                  </button>
-                  <button
-                    className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
-                    onClick={handleSignOut}
-                  >
+                  <LogoutLink className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
@@ -133,11 +118,11 @@ const ButtonAccount = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Logout
-                  </button>
+                    Abmelden
+                  </LogoutLink>
                 </div>
               </div>
-            </Popover.Panel>
+            </PopoverPanel>
           </Transition>
         </>
       )}

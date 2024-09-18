@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/libs/next-auth";
 import config from "@/config";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 // This is a server-side component to ensure the user is logged in.
 // If not, it will redirect to the login page.
@@ -14,9 +13,10 @@ export default async function LayoutPrivate({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const { getUser, isAuthenticated } = await getKindeServerSession();
+  const user = await getUser();
 
-  if (!session) {
+  if (!(await isAuthenticated())) {
     redirect(config.auth.loginUrl);
   }
 

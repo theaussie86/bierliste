@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import config from "@/config";
+import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 // A simple button to sign in with our providers (Google & Magic Links).
 // It automatically redirects user to callbackUrl (config.auth.callbackUrl) after login, which is normally a private page for users to manage their accounts.
@@ -16,27 +15,18 @@ const ButtonSignin = ({
   text?: string;
   extraStyle?: string;
 }) => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const { user, isAuthenticated } = useKindeBrowserClient();
 
-  const handleClick = () => {
-    if (status === "authenticated") {
-      router.push(config.auth.callbackUrl);
-    } else {
-      signIn(undefined, { callbackUrl: config.auth.callbackUrl });
-    }
-  };
-
-  if (status === "authenticated") {
+  if (isAuthenticated) {
     return (
       <Link
         href={config.auth.callbackUrl}
         className={`btn ${extraStyle ? extraStyle : ""}`}
       >
-        {session.user?.image ? (
+        {user.picture ? (
           <img
-            src={session.user?.image}
-            alt={session.user?.name || "Account"}
+            src={user.picture}
+            alt={user.given_name + " " + user.family_name || "Account"}
             className="w-6 h-6 rounded-full shrink-0"
             referrerPolicy="no-referrer"
             width={24}
@@ -44,21 +34,21 @@ const ButtonSignin = ({
           />
         ) : (
           <span className="w-6 h-6 bg-base-300 flex justify-center items-center rounded-full shrink-0">
-            {session.user?.name?.charAt(0) || session.user?.email?.charAt(0)}
+            {user.given_name?.charAt(0) || user.email.charAt(0)}
           </span>
         )}
-        {session.user?.name || session.user?.email || "Account"}
+        {user.given_name || user.email || "Account"}
       </Link>
     );
   }
 
   return (
-    <button
+    <LoginLink
       className={`btn ${extraStyle ? extraStyle : ""}`}
-      onClick={handleClick}
+      authUrlParams={{ lang: "de" }}
     >
       {text}
-    </button>
+    </LoginLink>
   );
 };
 
