@@ -8,7 +8,9 @@ import config from "@/config";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
 import Header from "@/components/Header";
-
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import connectMongo from "@/libs/mongoose";
+import User from "@/models/User";
 const font = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
@@ -22,7 +24,24 @@ export const viewport: Viewport = {
 // You can override them in each page passing params to getSOTags() function.
 export const metadata = getSEOTags();
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const { getUser, isAuthenticated } = await getKindeServerSession();
+  const user = await getUser();
+
+  if (user) {
+    await connectMongo();
+    let dbUser = await User.findOne({ kindeId: user.id }).exec();
+
+    const authenticated = await isAuthenticated();
+    if (!dbUser && authenticated) {
+      dbUser = await User.create({ kindeId: user.id });
+    }
+  }
+
   return (
     <html
       lang="en"

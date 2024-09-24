@@ -1,8 +1,6 @@
 import Link from "next/link";
-import ButtonSignin from "@/components/ButtonSignin";
 import Image from "next/image";
 import logo from "@/app/icon.png";
-import connectMongo from "@/libs/mongoose";
 
 export default function Page() {
   return (

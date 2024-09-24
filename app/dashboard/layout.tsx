@@ -15,6 +15,7 @@ export default async function LayoutPrivate({
 }) {
   const { getUser, isAuthenticated } = await getKindeServerSession();
   const user = await getUser();
+  console.log("User", user);
 
   if (!(await isAuthenticated())) {
     redirect(config.auth.loginUrl);
