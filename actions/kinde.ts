@@ -1,8 +1,14 @@
-import { UpdateUserData, Users } from "@kinde/management-api-js";
+"use server";
 
-export async function updateFirstName(data: UpdateUserData) {
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { UpdateUserData, Users, init } from "@kinde/management-api-js";
+
+export async function updateUserProfile(data: UpdateUserData) {
   try {
+    init();
     await Users.updateUser(data);
+    const { refreshTokens } = getKindeServerSession();
+    await refreshTokens();
   } catch (error) {
     console.error(error);
   }

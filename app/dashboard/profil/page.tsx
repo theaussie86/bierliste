@@ -1,5 +1,7 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import React from "react";
+import ProfileModal from "./modal";
+import OpenModalButton from "@/components/OpenModalButton";
 
 async function ProfilePage() {
   const { getUser, getPermission } = getKindeServerSession();
@@ -17,16 +19,7 @@ async function ProfilePage() {
             </dt>
             <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
               <span className="flex-grow">{user.given_name}</span>
-              {isGranted ? (
-                <span className="ml-4 flex-shrink-0">
-                  <button
-                    type="button"
-                    className="rounded-md bg-white font-medium text-secondary hover:text-secondary/60"
-                  >
-                    Ändern
-                  </button>
-                </span>
-              ) : null}
+              {isGranted ? <OpenModalButton selector="#modal-form" /> : null}
             </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -35,16 +28,7 @@ async function ProfilePage() {
             </dt>
             <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
               <span className="flex-grow">{user.family_name}</span>
-              {isGranted ? (
-                <span className="ml-4 flex-shrink-0">
-                  <button
-                    type="button"
-                    className="rounded-md bg-white font-medium text-secondary hover:text-secondary/60"
-                  >
-                    Ändern
-                  </button>
-                </span>
-              ) : null}
+              {isGranted ? <OpenModalButton selector="#modal-form" /> : null}
             </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -53,16 +37,6 @@ async function ProfilePage() {
             </dt>
             <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
               <span className="flex-grow">{user.email}</span>
-              {isGranted ? (
-                <span className="ml-4 flex-shrink-0">
-                  <button
-                    type="button"
-                    className="rounded-md bg-white font-medium text-secondary hover:text-secondary/60"
-                  >
-                    Ändern
-                  </button>
-                </span>
-              ) : null}
             </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -75,20 +49,7 @@ async function ProfilePage() {
           </div>
         </dl>
       </section>
-      <dialog id="modal-form" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
+      <ProfileModal />
     </>
   );
 }
