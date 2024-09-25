@@ -20,7 +20,7 @@ const ButtonSignin = ({
   if (isAuthenticated) {
     return (
       <Link
-        href={config.auth.callbackUrl}
+        href="/dashboard/profil"
         className={`btn ${extraStyle ? extraStyle : ""}`}
       >
         {user.picture ? (

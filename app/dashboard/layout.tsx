@@ -21,5 +21,7 @@ export default async function LayoutPrivate({
     redirect(config.auth.loginUrl);
   }
 
-  return <>{children}</>;
+  return (
+    <main className="min-h-screen p-8 pb-24 max-w-xl mx-auto">{children}</main>
+  );
 }
