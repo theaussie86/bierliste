@@ -1,6 +1,18 @@
 "use client";
 
-function OpenModalButton({ selector }: { selector: string }) {
+import { cn } from "@/lib/utils";
+import { ButtonHTMLAttributes } from "react";
+
+function OpenModalButton({
+  selector,
+  title = "Ändern",
+  className,
+  children,
+  ...props
+}: {
+  selector: string;
+  title?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <span className="ml-4 flex-shrink-0">
       <button
@@ -9,9 +21,13 @@ function OpenModalButton({ selector }: { selector: string }) {
           const modal = document.querySelector<HTMLDialogElement>(selector);
           modal?.showModal();
         }}
-        className="font-medium text-secondary hover:text-secondary/60"
+        className={cn(
+          "font-medium text-secondary hover:text-secondary/60",
+          className
+        )}
+        {...props}
       >
-        Ändern
+        {children || title}
       </button>
     </span>
   );

@@ -28,6 +28,16 @@ const links: {
     label: "Profil",
     requiredPermissions: ["update:self"],
   },
+  {
+    href: "/dashboard/teams",
+    label: "Teams",
+    requiredPermissions: [
+      "read:teams",
+      "update:teams",
+      "delete:teams",
+      "create:teams",
+    ],
+  },
 ];
 
 const cta: JSX.Element = <ButtonSignin text="Anmelden" />;

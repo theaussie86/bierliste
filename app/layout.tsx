@@ -33,15 +33,31 @@ export default async function RootLayout({
     await getKindeServerSession();
   const user = await getUser();
   const permissions = await getPermissions();
-  console.log("permissions", permissions);
 
   if (user) {
-    await connectMongo();
-    let dbUser = await User.findOne({ kindeId: user.id }).exec();
-
     const authenticated = await isAuthenticated();
-    if (!dbUser && authenticated) {
-      dbUser = await User.create({ kindeId: user.id });
+    if (authenticated) {
+      await connectMongo();
+      let dbUser = await User.findOne({ kindeId: user.id });
+
+      if (!dbUser) {
+        await User.create({
+          kindeId: user.id,
+          name: `${user.given_name} ${user.family_name}`,
+        });
+      } else {
+        // get the name of the user in the database and check if it is the same as given_name and family_name
+        const namesAreEqual =
+          dbUser.name === `${user.given_name} ${user.family_name}`;
+
+        // if not, update the user
+        if (!namesAreEqual) {
+          await User.findOneAndUpdate(
+            { kindeId: user.id },
+            { name: `${user.given_name} ${user.family_name}` }
+          );
+        }
+      }
     }
   }
 

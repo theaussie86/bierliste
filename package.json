@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.2",
     "@headlessui/react": "^2.1.7",
+    "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
     "@kinde/management-api-js": "^0.9.0",

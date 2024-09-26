@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { useEffect, useMemo } from "react";
 import { updateUserProfile } from "@/actions/kinde";
 
 const profileSchema = z.object({
@@ -20,8 +19,13 @@ const profileSchema = z.object({
 
 type ProfileSchema = z.infer<typeof profileSchema>;
 
-function ProfileModal() {
-  const { user, refreshData } = useKindeBrowserClient();
+function ProfileModal({
+  user,
+}: {
+  user: { given_name: string; family_name: string; id: string };
+}) {
+  console.log(user);
+  const { refreshData } = useKindeBrowserClient();
 
   const {
     handleSubmit,
@@ -30,15 +34,11 @@ function ProfileModal() {
     formState: { errors, isSubmitting },
   } = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
+    defaultValues: {
+      firstName: user?.given_name,
+      lastName: user?.family_name,
+    },
   });
-
-  useEffect(() => {
-    if (!user) return;
-    reset({
-      firstName: user.given_name,
-      lastName: user.family_name,
-    });
-  }, [user]);
 
   const onSubmit = async (data: ProfileSchema) => {
     try {
@@ -59,8 +59,8 @@ function ProfileModal() {
     // Close the modal
     const modal = document.querySelector<HTMLDialogElement>("#modal-form");
     modal?.close();
-    console.log(data);
   };
+
   return (
     <dialog id="modal-form" className="modal modal-bottom sm:modal-middle">
       <div className="modal-box">

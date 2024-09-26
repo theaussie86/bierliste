@@ -1,8 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/app/icon.png";
+import { get } from "http";
+import {
+  getKindeServerSession,
+  LoginLink,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
-export default function Page() {
+export default async function Page() {
+  const { isAuthenticated } = getKindeServerSession();
+  const loggedIn = await isAuthenticated();
   return (
     <>
       <main>
@@ -21,9 +28,13 @@ export default function Page() {
             Damit wir alle wissen, was wir getrunken haben 😉
           </p>
 
-          <Link className="btn btn-primary" href="/dashboard">
-            Los geht's
-          </Link>
+          {loggedIn ? (
+            <Link className="btn btn-primary" href="/dashboard">
+              Los geht's
+            </Link>
+          ) : (
+            <LoginLink className="btn btn-primary">Los geht's</LoginLink>
+          )}
         </section>
       </main>
     </>

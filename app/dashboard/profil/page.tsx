@@ -1,6 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import React from "react";
-import ProfileModal from "./modal";
+import ProfileModal from "../../../components/ProfileModal";
 import OpenModalButton from "@/components/OpenModalButton";
 
 async function ProfilePage() {
@@ -49,7 +49,7 @@ async function ProfilePage() {
           </div>
         </dl>
       </section>
-      <ProfileModal />
+      <ProfileModal user={user} />
     </>
   );
 }
