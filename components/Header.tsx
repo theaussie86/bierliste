@@ -16,18 +16,17 @@ import {
 const links: {
   href: string;
   label: string;
+  requiredPermissions?: string[];
 }[] = [
   {
-    href: "/#pricing",
-    label: "Pricing",
+    href: "/dashboard",
+    label: "Dashboard",
+    requiredPermissions: ["update:self"],
   },
   {
-    href: "/#testimonials",
-    label: "Reviews",
-  },
-  {
-    href: "/#faq",
-    label: "FAQ",
+    href: "/dashboard/profil",
+    label: "Profil",
+    requiredPermissions: ["update:self"],
   },
 ];
 
@@ -35,7 +34,7 @@ const cta: JSX.Element = <ButtonSignin text="Anmelden" />;
 
 // A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
 // The header is responsive, and on mobile, the links are hidden behind a burger button.
-const Header = () => {
+const Header = ({ permissions }: { permissions?: string[] }) => {
   const { isAuthenticated } = useKindeBrowserClient();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -97,16 +96,21 @@ const Header = () => {
 
         {/* Your links on large screens */}
         <div className="hidden lg:flex lg:justify-center lg:gap-12 lg:items-center">
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.href}
-              className="link link-hover"
-              title={link.label}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            return !link.requiredPermissions ||
+              link.requiredPermissions.every((perm) =>
+                permissions?.includes(perm)
+              ) ? (
+              <Link
+                href={link.href}
+                key={link.href}
+                className="link link-hover"
+                title={link.label}
+              >
+                {link.label}
+              </Link>
+            ) : null;
+          })}
           {isAuthenticated ? (
             <LogoutLink className="link link-hover">Logout</LogoutLink>
           ) : null}
@@ -166,16 +170,21 @@ const Header = () => {
           <div className="flow-root mt-6">
             <div className="py-4">
               <div className="flex flex-col gap-y-4 items-start">
-                {links.map((link) => (
-                  <Link
-                    href={link.href}
-                    key={link.href}
-                    className="link link-hover"
-                    title={link.label}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {links.map((link) =>
+                  !link.requiredPermissions ||
+                  link.requiredPermissions.every((perm) =>
+                    permissions?.includes(perm)
+                  ) ? (
+                    <Link
+                      href={link.href}
+                      key={link.href}
+                      className="link link-hover"
+                      title={link.label}
+                    >
+                      {link.label}
+                    </Link>
+                  ) : null
+                )}
                 {isAuthenticated ? (
                   <LogoutLink className="link link-hover">Logout</LogoutLink>
                 ) : null}

@@ -29,8 +29,11 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const { getUser, isAuthenticated } = await getKindeServerSession();
+  const { getUser, isAuthenticated, getPermissions } =
+    await getKindeServerSession();
   const user = await getUser();
+  const permissions = await getPermissions();
+  console.log("permissions", permissions);
 
   if (user) {
     await connectMongo();
@@ -55,7 +58,7 @@ export default async function RootLayout({
       )}
       <body className="h-full">
         {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-        <Header />
+        <Header permissions={permissions?.permissions} />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
