@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import connectMongo from "@/libs/mongoose";
 import User from "@/models/User";
+import { TeamStoreProvider } from "./stores/providers/team-store-provider";
 const font = Inter({ subsets: ["latin"] });
 
 export const viewport: Viewport = {
@@ -73,9 +74,11 @@ export default async function RootLayout({
         </head>
       )}
       <body className="h-full">
-        {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-        <Header permissions={permissions?.permissions} />
-        <ClientLayout>{children}</ClientLayout>
+        <TeamStoreProvider>
+          {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
+          <Header permissions={permissions?.permissions} />
+          <ClientLayout>{children}</ClientLayout>
+        </TeamStoreProvider>
       </body>
     </html>
   );

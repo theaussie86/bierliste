@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import toJSON from "./plugins/toJSON";
+import Team, { TeamSchema } from "./Team";
 
 export interface UserSchema extends mongoose.Document {
   kindeId: string;
@@ -32,6 +33,10 @@ userSchema.methods.updateName = async function (
 ): Promise<void> {
   this.name = newName;
   await this.save();
+};
+
+userSchema.methods.getTeams = async function (): Promise<TeamSchema[]> {
+  return Team.find({ users: { $in: [this._id] } }, "name _id");
 };
 
 // add plugin that converts mongoose to json

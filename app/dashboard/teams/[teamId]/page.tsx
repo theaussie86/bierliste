@@ -21,13 +21,15 @@ async function TeamDetailsPage({ params }: { params: { teamId: string } }) {
       <h1 className="text-3xl md:text-4xl font-bold">Team Mitglieder</h1>
       <TeamName team={name} />
 
-      <div className="flex justify-end">
-        <OpenModalButton
-          className="btn btn-sm btn-primary text-primary-content hover:text-primary-content/60"
-          selector="#modal-select-users"
-          title="Mitglieder hinzufügen"
-        />
-      </div>
+      {notUsers.length ? (
+        <div className="flex justify-end">
+          <OpenModalButton
+            className="btn btn-sm btn-primary text-primary-content hover:text-primary-content/60"
+            selector="#modal-select-users"
+            title="Mitglieder hinzufügen"
+          />
+        </div>
+      ) : null}
       <div className="overflow-x-auto mt-6">
         {users.length ? (
           <table className="table w-full">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import type { JSX } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -12,6 +12,9 @@ import {
   LogoutLink,
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
+import { useTeamStore } from "@/app/stores/providers/team-store-provider";
+import ButtonChangeTeam from "./ButtonChangeTeam";
+import { getUserTeams } from "@/actions/user";
 
 const links: {
   href: string;
@@ -45,9 +48,22 @@ const cta: JSX.Element = <ButtonSignin text="Anmelden" />;
 // A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
 // The header is responsive, and on mobile, the links are hidden behind a burger button.
 const Header = ({ permissions }: { permissions?: string[] }) => {
-  const { isAuthenticated } = useKindeBrowserClient();
+  const { user, isAuthenticated } = useKindeBrowserClient();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const setAvailableTeam = useTeamStore((state) => state.setAvailableTeams);
+  const team = useTeamStore((state) => state.team);
+  const availableTeams = useTeamStore((state) => state.availableTeams);
+
+  useEffect(() => {
+    const fetchUserTeams = async () => {
+      if (!user) return;
+      const teams = await getUserTeams(user.id);
+      setAvailableTeam(teams);
+    };
+    fetchUserTeams();
+  }, [user]);
 
   // setIsOpen(false) when the route changes (i.e: when the user clicks on a link on mobile)
   useEffect(() => {
@@ -79,6 +95,12 @@ const Header = ({ permissions }: { permissions?: string[] }) => {
             <span className="font-extrabold text-lg">{config.appName}</span>
           </Link>
         </div>
+
+        {/* Teamname on small screens */}
+        {/* <div className="flex lg:hidden justify-center flex-1">
+          {availableTeams?.find((t) => (t.id = team)).name}
+        </div> */}
+
         {/* Burger button to open menu on mobile */}
         <div className="flex lg:hidden">
           <button
@@ -122,7 +144,10 @@ const Header = ({ permissions }: { permissions?: string[] }) => {
             ) : null;
           })}
           {isAuthenticated ? (
-            <LogoutLink className="link link-hover">Logout</LogoutLink>
+            <>
+              <LogoutLink className="link link-hover">Logout</LogoutLink>
+              <ButtonChangeTeam />
+            </>
           ) : null}
         </div>
 
@@ -196,7 +221,10 @@ const Header = ({ permissions }: { permissions?: string[] }) => {
                   ) : null
                 )}
                 {isAuthenticated ? (
-                  <LogoutLink className="link link-hover">Logout</LogoutLink>
+                  <>
+                    <LogoutLink className="link link-hover">Logout</LogoutLink>
+                    <ButtonChangeTeam />
+                  </>
                 ) : null}
               </div>
             </div>
