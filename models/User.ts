@@ -36,7 +36,7 @@ userSchema.methods.updateName = async function (
 };
 
 userSchema.methods.getTeams = async function (): Promise<TeamSchema[]> {
-  return Team.find({ users: { $in: [this._id] } }, "name _id");
+  return Team.find({ users: { $in: [this._id] } }).select({ name: 1, _id: 1 });
 };
 
 // add plugin that converts mongoose to json
