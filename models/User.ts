@@ -5,6 +5,7 @@ import Team, { TeamSchema } from "./Team";
 export interface UserSchema extends mongoose.Document {
   kindeId: string;
   name: string;
+  teams: mongoose.Schema.Types.ObjectId[];
 }
 
 // USER SCHEMA
@@ -21,6 +22,12 @@ const userSchema = new mongoose.Schema<UserSchema>(
       required: true,
       trim: true,
     },
+    teams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Team",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -33,10 +40,6 @@ userSchema.methods.updateName = async function (
 ): Promise<void> {
   this.name = newName;
   await this.save();
-};
-
-userSchema.methods.getTeams = async function (): Promise<TeamSchema[]> {
-  return Team.find({ users: { $in: [this._id] } }).select({ name: 1, _id: 1 });
 };
 
 // add plugin that converts mongoose to json
