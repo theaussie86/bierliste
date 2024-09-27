@@ -9,8 +9,6 @@ function ButtonChangeTeam() {
   const setTeam = useTeamStore((state) => state.setTeam);
   const currentTeam = useTeamStore((state) => state.team);
 
-  console.log(currentTeam);
-
   function handleTeamChange(teamId: string) {
     // handle team change
     setTeam(teamId);
@@ -20,7 +18,12 @@ function ButtonChangeTeam() {
     dropdowns?.forEach((d) => d.removeAttribute("open"));
   }
 
-  return (
+  if (availableTeams.length === 0) return null;
+  if (availableTeams.length === 1) {
+    setTeam(availableTeams[0].id);
+  }
+
+  return availableTeams.length > 1 ? (
     <details className="dropdown">
       <summary className="btn">
         {availableTeams.find((t) => t.id === currentTeam)?.name}
@@ -41,6 +44,8 @@ function ButtonChangeTeam() {
           ))}
       </ul>
     </details>
+  ) : (
+    <div>Team: {availableTeams.find((t) => t.id === currentTeam)?.name}</div>
   );
 }
 

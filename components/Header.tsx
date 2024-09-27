@@ -53,8 +53,6 @@ const Header = ({ permissions }: { permissions?: string[] }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const setAvailableTeam = useTeamStore((state) => state.setAvailableTeams);
-  const team = useTeamStore((state) => state.team);
-  const availableTeams = useTeamStore((state) => state.availableTeams);
 
   useEffect(() => {
     const fetchUserTeams = async () => {
